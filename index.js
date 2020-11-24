@@ -1,0 +1,8 @@
+require('dotenv').config({ path: '.env' });
+
+const app = require('./src/app');
+
+app.set('port', process.env.PORT || 3000);
+const server = app.listen(app.get('port'), () => {
+  console.log(`Express running on PORT ${server.address().port}`);
+});
