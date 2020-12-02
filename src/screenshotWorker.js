@@ -1,34 +1,25 @@
-const Pageres = require('pageres');
-
-const takeScreenshot = async (url, filename) => {
-  try {
-    await new Pageres({
-      delay: 2,
-      filename,
-      format: process.env.IMAGE_EXTENSION,
-    })
-      .src(url, ['1024x768'])
-      .dest('images')
-      .run();
-    return true;
-  } catch (err) {
-    console.log('WHOOOOPS ERROR', err);
-    return false;
-  }
-};
+const debug = require('debug')('valiu:screenshotWorker');
+const workerFunctions = require('./workerFunctions');
 
 module.exports = async (job) => {
   const { url, filename } = job.data;
 
-  const result = await takeScreenshot(url, filename);
+  const path = `${process.env.IMAGE_FOLDER}/${filename}`;
+  const error = await workerFunctions.takeScreenshot(url, path);
 
-  if (result) {
-    console.log('Finished generating screenshots!');
+  if (!error) {
+    debug(`Success. Generated screenshot ${filename}`);
   } else {
-    console.log('Oh no something went wrong!!!');
+    debug(error);
+    await job.moveToFailed({
+      message: error.message,
+    });
+    debug(`Requeue job with id: ${job.id}`);
   }
 
   return {
-    outURL: `The OutURL is ${job.data.url}`,
+    url,
+    screenshotURL: path,
+    generated: !error,
   };
 };

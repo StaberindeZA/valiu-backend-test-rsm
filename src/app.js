@@ -33,7 +33,7 @@ app.post('/screenshot', async (req, res) => {
       .json({ ok: false, message: 'Please provide a valid URL.' });
 
   const uniqueId = getUniqueId();
-  const filename = uniqueId;
+  const filename = getImageFilename(uniqueId);
   const screenshotURL = createImageUrl(uniqueId);
 
   // Screenshot Queue - Producer
