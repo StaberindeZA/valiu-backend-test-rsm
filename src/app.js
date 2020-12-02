@@ -15,7 +15,7 @@ const app = express();
 
 app.use(express.json());
 
-const screenshotQueue = new Queue('screenshot-queue');
+const screenshotQueue = new Queue('screenshot-queue', 'redis://127.0.0.1:6379');
 
 app.get('/', (_, res) => res.status(200).json({ ok: true }));
 

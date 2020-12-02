@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
+    "test-detect": "jest --detectOpenHandles",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "dev": "DEBUG=valiu* nodemon ./index.js"
@@ -24,6 +25,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "ioredis": "^4.19.2",
     "jest": "^26.6.3",
     "nodemon": "^2.0.6",
     "prettier": "^2.1.2",
