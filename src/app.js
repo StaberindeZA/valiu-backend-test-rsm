@@ -64,7 +64,7 @@ app.get('/screenshot/:screenshotId', async (req, res) => {
 
   try {
     const data = await fs.promises.readFile(imagePath);
-    res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+    res.writeHead(200, { 'Content-Type': process.env.IMAGE_MIMETYPE });
     res.end(data);
   } catch (err) {
     res.status(404).json({ ok: false });

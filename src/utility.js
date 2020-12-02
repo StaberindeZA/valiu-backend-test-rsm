@@ -11,10 +11,16 @@ exports.createImageUrl = (screenshotId) =>
 exports.getImageFilename = (screenshotId) =>
   screenshotId ? `${screenshotId}.${process.env.IMAGE_EXTENSION}` : null;
 
-exports.getImagePath = (screenshotId) =>
-  screenshotId
-    ? `${process.env.IMAGE_FOLDER}/${this.getImageFilename(screenshotId)}`
+exports.getImagePath = (screenshotId) => {
+  const imageFolder =
+    process.env.NODE_ENV === 'test'
+      ? `${process.env.IMAGE_FOLDER}/test`
+      : `${process.env.IMAGE_FOLDER}`;
+
+  return screenshotId
+    ? `${imageFolder}/${this.getImageFilename(screenshotId)}`
     : null;
+};
 
 exports.isValidUrl = (s, protocols = ['http', 'https']) => {
   try {

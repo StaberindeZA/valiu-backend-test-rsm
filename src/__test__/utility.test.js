@@ -1,5 +1,29 @@
 require('dotenv').config({ path: '.env' });
+const fs = require('fs');
+const path = require('path');
 const utility = require('../utility');
+
+beforeAll(async () => {
+  const imageDir = path.join(
+    __dirname,
+    `../../${process.env.IMAGE_FOLDER}/test`
+  );
+  const imagePath = `${imageDir}/bitcoin.jpeg`;
+  try {
+    await fs.promises.mkdir(imageDir);
+    await fs.promises.writeFile(imagePath, '');
+  } catch (error) {
+    console.log('An error ocurred', error);
+  }
+});
+
+afterAll(async () => {
+  const imageDir = path.join(
+    __dirname,
+    `../../${process.env.IMAGE_FOLDER}/test`
+  );
+  await fs.promises.rmdir(imageDir, { recursive: true });
+});
 
 test('Create Image URL', () => {
   expect(utility.createImageUrl('123')).toBe(
@@ -19,7 +43,7 @@ test('Get the Image Filename', () => {
 
 test('Get image file path', () => {
   expect(utility.getImagePath('123')).toBe(
-    `${process.env.IMAGE_FOLDER}/123.${process.env.IMAGE_EXTENSION}`
+    `${process.env.IMAGE_FOLDER}/test/123.${process.env.IMAGE_EXTENSION}`
   );
 
   expect(utility.getImagePath()).toBeNull();

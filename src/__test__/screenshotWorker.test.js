@@ -1,4 +1,6 @@
 require('dotenv').config({ path: '.env' });
+const fs = require('fs');
+const path = require('path');
 const screenshotWorker = require('../screenshotWorker');
 const workerFunctions = require('../workerFunctions');
 
@@ -13,7 +15,7 @@ test('Successfully generate screenshot', async () => {
 
   expect(result).toEqual({
     url: 'https://www.reinomuhl.com',
-    screenshotURL: `${process.env.IMAGE_FOLDER}/testfile.jpeg`,
+    screenshotURL: `${process.env.IMAGE_FOLDER}/test/testfile.jpeg`,
     generated: true,
   });
 
@@ -32,7 +34,7 @@ test('Failed generate screenshot', async () => {
 
   expect(result).toEqual({
     url: 'http://www.localhost.com:4444',
-    screenshotURL: `${process.env.IMAGE_FOLDER}/failed.jpeg`,
+    screenshotURL: `${process.env.IMAGE_FOLDER}/test/failed.jpeg`,
     generated: false,
   });
 

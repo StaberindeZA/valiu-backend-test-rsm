@@ -1,32 +1,35 @@
 require('dotenv').config({ path: '.env' });
 const request = require('supertest');
-const Queue = require('bull');
-const Redis = require('ioredis');
+const fs = require('fs');
+const path = require('path');
 const app = require('../app');
 
 const agent = request.agent(app);
 
-// afterAll(() => {
-//   const screenshotQueue = new Queue(
-//     'screenshot-queue',
-//     'redis://127.0.0.1:6379'
-//   );
-//   screenshotQueue
-//     .close()
-//     .then(() => console.log('done'))
-//     .catch((err) => console.log(err));
-// });
+beforeAll(async () => {
+  const imageDir = path.join(
+    __dirname,
+    `../../${process.env.IMAGE_FOLDER}/test`
+  );
+  const imagePath = `${imageDir}/bitcoin.jpeg`;
+  try {
+    await fs.promises.mkdir(imageDir);
+    await fs.promises.writeFile(imagePath, '');
+  } catch (error) {
+    console.log('An error ocurred', error);
+  }
+});
+
+afterAll(async () => {
+  // Delete all test images
+  const imageDir = path.join(
+    __dirname,
+    `../../${process.env.IMAGE_FOLDER}/test`
+  );
+  await fs.promises.rmdir(imageDir, { recursive: true });
+});
 
 describe('Add URL to screenshot queue', () => {
-  beforeEach(() => {
-    // Keep for now
-  });
-
-  afterEach(() => {
-    // Keep for now
-    // Clean up created images
-  });
-
   test('Successfully create job', async () => {
     const res = await agent
       .post('/screenshot')
@@ -36,7 +39,7 @@ describe('Add URL to screenshot queue', () => {
     expect(res.body.ok).toBeTruthy();
     expect(res.body.screenshotGenerated).toBeFalsy();
     expect(res.body.url).toBe('https://www.reinomuhl.com');
-    // expect(res.body.screenshotURL).toBe();
+    expect(res.body.screenshotURL).toBeTruthy();
   });
 
   test('No body provided', async () => {
@@ -66,14 +69,42 @@ describe('Add URL to screenshot queue', () => {
   });
 });
 
-describe.skip('Check status of screenshot', () => {
-  test('Test', () => {
-    expect(0).toBeFalsy();
+describe('Check status of screenshot', () => {
+  test('Screenshot exists', async () => {
+    const res = await agent.get('/screenshot/bitcoin/status').send(null);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.ok).toBeTruthy();
+    expect(res.body.screenshotGenerated).toBeTruthy();
+    expect(res.body.screenshotURL).toBe(
+      `${process.env.SERVER_HOST}/screenshot/bitcoin`
+    );
+  });
+
+  test('Screenshot does not exist', async () => {
+    const res = await agent.get('/screenshot/doesnotexist/status').send(null);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.ok).toBeTruthy();
+    expect(res.body.screenshotGenerated).toBeFalsy();
+    expect(res.body.screenshotURL).toBe(
+      `${process.env.SERVER_HOST}/screenshot/doesnotexist`
+    );
   });
 });
 
-describe.skip('Retrieve screenshot', () => {
-  test('Test', () => {
-    expect(0).toBeFalsy();
+describe('Retrieve screenshot', () => {
+  test('Screenshot exists', async () => {
+    const res = await agent.get('/screenshot/bitcoin').send(null);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.headers['content-type']).toEqual(process.env.IMAGE_MIMETYPE);
+  });
+
+  test('Screenshot does not exist', async () => {
+    const res = await agent.get('/screenshot/doesnotexist').send(null);
+
+    expect(res.statusCode).toEqual(404);
+    expect(res.body.ok).toBeFalsy();
   });
 });
