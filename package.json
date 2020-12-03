@@ -2,13 +2,14 @@
   "name": "valiu-backend-test-rsm",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "jest",
     "test-detect": "jest --detectOpenHandles",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "dev": "DEBUG=valiu* nodemon ./index.js"
+    "dev": "DEBUG=valiu* nodemon ./index.js",
+    "built": "nodemon ./built/index.js"
   },
   "keywords": [],
   "author": "",

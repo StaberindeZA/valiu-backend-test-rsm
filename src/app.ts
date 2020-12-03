@@ -1,14 +1,14 @@
-const express = require('express');
-const Queue = require('bull');
-const fs = require('fs');
-const {
+import * as express from 'express';
+import * as Queue from 'bull';
+import * as fs from 'fs';
+import {
   isValidUrl,
   createImageUrl,
   screenshotExists,
   getImagePath,
   getUniqueId,
   getImageFilename,
-} = require('./utility');
+} from './utility';
 require('./screenshotConsumer');
 
 const app = express();

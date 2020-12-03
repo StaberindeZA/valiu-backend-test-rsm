@@ -1,28 +1,28 @@
 /* eslint-disable no-nested-ternary */
-const { URL } = require('url');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
+import { URL } from 'url';
+import * as fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
-exports.getUniqueId = () => uuidv4();
+export const getUniqueId = () => uuidv4();
 
-exports.createImageUrl = (screenshotId) =>
+export const createImageUrl = (screenshotId) =>
   screenshotId ? `${process.env.SERVER_HOST}/screenshot/${screenshotId}` : null;
 
-exports.getImageFilename = (screenshotId) =>
+export const getImageFilename = (screenshotId) =>
   screenshotId ? `${screenshotId}.${process.env.IMAGE_EXTENSION}` : null;
 
-exports.getImagePath = (screenshotId) => {
+export const getImagePath = (screenshotId) => {
   const imageFolder =
     process.env.NODE_ENV === 'test'
       ? `${process.env.IMAGE_FOLDER}/test`
       : `${process.env.IMAGE_FOLDER}`;
 
   return screenshotId
-    ? `${imageFolder}/${this.getImageFilename(screenshotId)}`
+    ? `${imageFolder}/${getImageFilename(screenshotId)}`
     : null;
 };
 
-exports.isValidUrl = (s, protocols = ['http', 'https']) => {
+export const isValidUrl = (s, protocols = ['http', 'https']) => {
   try {
     const url = new URL(s);
     return protocols
@@ -35,10 +35,10 @@ exports.isValidUrl = (s, protocols = ['http', 'https']) => {
   }
 };
 
-exports.screenshotExists = async (screenshotId) => {
+export const screenshotExists = async (screenshotId) => {
   try {
     await fs.promises.access(
-      this.getImagePath(screenshotId),
+      getImagePath(screenshotId),
       fs.constants.F_OK
     );
     return true;
