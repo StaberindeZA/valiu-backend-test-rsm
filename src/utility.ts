@@ -6,10 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 export const getUniqueId = () => uuidv4();
 
 export const createImageUrl = (screenshotId: string): string =>
-  screenshotId ? `${process.env.SERVER_HOST}/screenshot/${screenshotId}` : null;
+  screenshotId ? `${process.env.SERVER_HOST}/screenshot/${screenshotId}` : '';
 
 export const getImageFilename = (screenshotId: string): string =>
-  screenshotId ? `${screenshotId}.${process.env.IMAGE_EXTENSION}` : null;
+  screenshotId ? `${screenshotId}.${process.env.IMAGE_EXTENSION}` : '';
 
 export const getImagePath = (screenshotId: string): string => {
   const imageFolder =
@@ -19,7 +19,7 @@ export const getImagePath = (screenshotId: string): string => {
 
   return screenshotId
     ? `${imageFolder}/${getImageFilename(screenshotId)}`
-    : null;
+    : '';
 };
 
 export const isValidUrl = (s: string, protocols: Array<string> = ['http', 'https']): boolean => {

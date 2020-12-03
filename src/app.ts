@@ -1,6 +1,6 @@
-import * as express from 'express';
-import * as Queue from 'bull';
-import * as fs from 'fs';
+import express from 'express';
+import Queue from 'bull';
+import fs from 'fs';
 import {
   isValidUrl,
   createImageUrl,
@@ -19,7 +19,7 @@ const screenshotQueue = new Queue('screenshot-queue', 'redis://127.0.0.1:6379');
 
 app.get('/', (_, res) => res.status(200).json({ ok: true }));
 
-app.post('/screenshot', async (req, res) => {
+app.post('/screenshot', async (req: express.Request, res: express.Response) => {
   const { url } = req.body;
 
   if (!url)
@@ -83,4 +83,4 @@ app.get('/screenshot/:screenshotId/status', async (req, res) => {
   });
 });
 
-module.exports = app;
+export default app;

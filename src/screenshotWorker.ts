@@ -1,11 +1,12 @@
-import * as path from 'path';
-import * as DebugLogger from 'debug';
+import path from 'path';
+import DebugLogger from 'debug';
 import { getImagePath } from './utility';
 import * as workerFunctions from './workerFunctions';
+import { Job } from 'bull';
 
 const debug = DebugLogger('valiu:screenshotWorker');
 
-export default async (job) => {
+export default async (job: Job) => {
   const { url, filename } = job.data;
 
   const filePath = `${path.dirname(getImagePath(filename))}/${filename}`;

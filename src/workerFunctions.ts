@@ -1,10 +1,12 @@
-import * as puppeteer from 'puppeteer';
-import * as DebugLogger from 'debug';
+import puppeteer, { Page, ScreenshotOptions } from 'puppeteer';
+import DebugLogger from 'debug';
 
 const debug = DebugLogger('valiu:workerFunctions');
 
-const screenshot = (page, url, path) =>
-  new Promise((resolve, reject) => {
+const screenshot = (page: Page, url: string, path: string) => {
+  const type: ScreenshotOptions["type"] = process.env.IMAGE_EXTENSION;
+  
+  return new Promise((resolve, reject) => {
     page.on('error', (err) => {
       reject(err);
     });
@@ -18,7 +20,7 @@ const screenshot = (page, url, path) =>
       .then(() =>
         page.screenshot({
           path,
-          type: `${process.env.IMAGE_EXTENSION}`,
+          type,
         })
       )
       .then(() => resolve(false))
@@ -26,8 +28,10 @@ const screenshot = (page, url, path) =>
         reject(err.message);
       });
   });
+}
+  
 
-export const takeScreenshot = async (url, path) => {
+export const takeScreenshot = async (url: string, path: string) => {
   const browser = await puppeteer.launch({
     args: [
       '--disable-gpu',

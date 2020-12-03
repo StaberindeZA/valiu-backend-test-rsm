@@ -8,99 +8,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.takeScreenshot = void 0;
-var puppeteer = require("puppeteer");
-var DebugLogger = require("debug");
-var debug = DebugLogger('valiu:workerFunctions');
-var screenshot = function (page, url, path) {
-    return new Promise(function (resolve, reject) {
-        page.on('error', function (err) {
+const puppeteer_1 = __importDefault(require("puppeteer"));
+const debug_1 = __importDefault(require("debug"));
+const debug = debug_1.default('valiu:workerFunctions');
+const screenshot = (page, url, path) => {
+    const type = process.env.IMAGE_EXTENSION;
+    return new Promise((resolve, reject) => {
+        page.on('error', (err) => {
             reject(err);
         });
-        page.on('load', function () { return debug('Page loaded Successfully'); });
-        page.on('pageerror', function (err) {
+        page.on('load', () => debug('Page loaded Successfully'));
+        page.on('pageerror', (err) => {
             reject(err);
         });
         page
             .goto(url, { waitUntil: 'load', timeout: 20000 })
-            .then(function () {
-            return page.screenshot({
-                path: path,
-                type: "" + process.env.IMAGE_EXTENSION,
-            });
-        })
-            .then(function () { return resolve(false); })
-            .catch(function (err) {
+            .then(() => page.screenshot({
+            path,
+            type,
+        }))
+            .then(() => resolve(false))
+            .catch((err) => {
             reject(err.message);
         });
     });
 };
-var takeScreenshot = function (url, path) { return __awaiter(void 0, void 0, void 0, function () {
-    var browser, page, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, puppeteer.launch({
-                    args: [
-                        '--disable-gpu',
-                        '--no-sandbox',
-                        '--lang=en-US',
-                        '--disable-setuid-sandbox',
-                        '--disable-dev-shm-usage',
-                    ],
-                })];
-            case 1:
-                browser = _a.sent();
-                return [4 /*yield*/, browser.newPage()];
-            case 2:
-                page = _a.sent();
-                _a.label = 3;
-            case 3:
-                _a.trys.push([3, 5, 6, 9]);
-                return [4 /*yield*/, screenshot(page, url, path)];
-            case 4:
-                _a.sent();
-                return [2 /*return*/, false];
-            case 5:
-                err_1 = _a.sent();
-                debug("Caught error and escallating");
-                return [2 /*return*/, err_1];
-            case 6: return [4 /*yield*/, page.close()];
-            case 7:
-                _a.sent();
-                return [4 /*yield*/, browser.close()];
-            case 8:
-                _a.sent();
-                return [7 /*endfinally*/];
-            case 9: return [2 /*return*/];
-        }
+const takeScreenshot = (url, path) => __awaiter(void 0, void 0, void 0, function* () {
+    const browser = yield puppeteer_1.default.launch({
+        args: [
+            '--disable-gpu',
+            '--no-sandbox',
+            '--lang=en-US',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+        ],
     });
-}); };
+    const page = yield browser.newPage();
+    try {
+        yield screenshot(page, url, path);
+        return false;
+    }
+    catch (err) {
+        debug(`Caught error and escallating`);
+        return err;
+    }
+    finally {
+        yield page.close();
+        yield browser.close();
+    }
+});
 exports.takeScreenshot = takeScreenshot;
