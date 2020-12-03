@@ -1,17 +1,18 @@
 require('dotenv').config({ path: '.env' });
-const fs = require('fs');
-const path = require('path');
-const screenshotWorker = require('../screenshotWorker');
-const workerFunctions = require('../workerFunctions');
+import screenshotWorker from '../screenshotWorker';
+import * as workerFunctions from '../workerFunctions';
+import Queue, { Job, JobId } from 'bull';
 
 test('Successfully generate screenshot', async () => {
   const spy = jest.spyOn(workerFunctions, 'takeScreenshot');
   spy.mockResolvedValue(false);
 
-  const result = await screenshotWorker({
+  const input = <Job>{
     id: '1',
     data: { url: 'https://www.reinomuhl.com', filename: 'testfile.jpeg' },
-  });
+  };
+
+  const result = await screenshotWorker(input);
 
   expect(result).toEqual({
     url: 'https://www.reinomuhl.com',
@@ -26,11 +27,20 @@ test('Failed generate screenshot', async () => {
   const spy = jest.spyOn(workerFunctions, 'takeScreenshot');
   spy.mockResolvedValue('Error message');
 
-  const result = await screenshotWorker({
-    id: '2',
+  // moveToFailed(errorInfo: { message: string; }, ignoreLock?: boolean): Promise<[any, JobId] | null>;
+  const moveToFailed = (errorInfo: { message: string; }, ignoreLock?: boolean): Promise<[any, JobId] | null> => {
+    return new Promise((resolve, reject) => {
+      resolve(null);
+    });
+  }
+
+  const input = <Job>{
+    id: '1',
     data: { url: 'http://www.localhost.com:4444', filename: 'failed.jpeg' },
-    moveToFailed: () => true,
-  });
+    moveToFailed,
+  };
+
+  const result = await screenshotWorker(input);
 
   expect(result).toEqual({
     url: 'http://www.localhost.com:4444',

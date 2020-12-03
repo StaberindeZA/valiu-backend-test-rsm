@@ -1,7 +1,7 @@
 require('dotenv').config({ path: '.env' });
-const fs = require('fs');
-const path = require('path');
-const utility = require('../utility');
+import fs from 'fs';
+import path from 'path'
+import * as utility from '../utility';
 
 beforeAll(async () => {
   const imageDir = path.join(
@@ -30,7 +30,7 @@ test('Create Image URL', () => {
     `${process.env.SERVER_HOST}/screenshot/123`
   );
 
-  expect(utility.createImageUrl()).toBeNull();
+  expect(utility.createImageUrl('')).toBeFalsy();
 });
 
 test('Get the Image Filename', () => {
@@ -38,7 +38,7 @@ test('Get the Image Filename', () => {
     `123.${process.env.IMAGE_EXTENSION}`
   );
 
-  expect(utility.getImageFilename()).toBeNull();
+  expect(utility.getImageFilename('')).toBeFalsy();
 });
 
 test('Get image file path', () => {
@@ -46,7 +46,7 @@ test('Get image file path', () => {
     `${process.env.IMAGE_FOLDER}/test/123.${process.env.IMAGE_EXTENSION}`
   );
 
-  expect(utility.getImagePath()).toBeNull();
+  expect(utility.getImagePath('')).toBeFalsy();
 });
 
 test('Check if the URL is valid', () => {

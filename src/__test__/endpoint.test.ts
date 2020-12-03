@@ -1,8 +1,8 @@
 require('dotenv').config({ path: '.env' });
-const request = require('supertest');
-const fs = require('fs');
-const path = require('path');
-const app = require('../app');
+import request, { Response } from 'supertest';
+import fs from 'fs';
+import path from 'path';
+import app from '../app';
 
 const agent = request.agent(app);
 
@@ -35,7 +35,7 @@ describe('Add URL to screenshot queue', () => {
       .post('/screenshot')
       .send({ url: 'https://www.reinomuhl.com' });
 
-    expect(res.statusCode).toEqual(200);
+    expect(res.status).toEqual(200);
     expect(res.body.ok).toBeTruthy();
     expect(res.body.screenshotGenerated).toBeFalsy();
     expect(res.body.url).toBe('https://www.reinomuhl.com');
@@ -43,9 +43,9 @@ describe('Add URL to screenshot queue', () => {
   });
 
   test('No body provided', async () => {
-    const res = await agent.post('/screenshot').send(null);
+    const res = await agent.post('/screenshot').send(undefined);
 
-    expect(res.statusCode).toEqual(400);
+    expect(res.status).toEqual(400);
     expect(res.body.ok).toBeFalsy();
     expect(res.body.message).toBe('Please provide a URL.');
   });
@@ -53,7 +53,7 @@ describe('Add URL to screenshot queue', () => {
   test('No URL provided', async () => {
     const res = await agent.post('/screenshot').send({ url: '' });
 
-    expect(res.statusCode).toEqual(400);
+    expect(res.status).toEqual(400);
     expect(res.body.ok).toBeFalsy();
     expect(res.body.message).toBe('Please provide a URL.');
   });
@@ -63,7 +63,7 @@ describe('Add URL to screenshot queue', () => {
       .post('/screenshot')
       .send({ url: 'abc://www.reinomuhl.com' });
 
-    expect(res.statusCode).toEqual(400);
+    expect(res.status).toEqual(400);
     expect(res.body.ok).toBeFalsy();
     expect(res.body.message).toBe('Please provide a valid URL.');
   });
@@ -71,9 +71,9 @@ describe('Add URL to screenshot queue', () => {
 
 describe('Check status of screenshot', () => {
   test('Screenshot exists', async () => {
-    const res = await agent.get('/screenshot/bitcoin/status').send(null);
+    const res = await agent.get('/screenshot/bitcoin/status').send(undefined);
 
-    expect(res.statusCode).toEqual(200);
+    expect(res.status).toEqual(200);
     expect(res.body.ok).toBeTruthy();
     expect(res.body.screenshotGenerated).toBeTruthy();
     expect(res.body.screenshotURL).toBe(
@@ -82,9 +82,9 @@ describe('Check status of screenshot', () => {
   });
 
   test('Screenshot does not exist', async () => {
-    const res = await agent.get('/screenshot/doesnotexist/status').send(null);
+    const res = await agent.get('/screenshot/doesnotexist/status').send(undefined);
 
-    expect(res.statusCode).toEqual(200);
+    expect(res.status).toEqual(200);
     expect(res.body.ok).toBeTruthy();
     expect(res.body.screenshotGenerated).toBeFalsy();
     expect(res.body.screenshotURL).toBe(
@@ -95,16 +95,16 @@ describe('Check status of screenshot', () => {
 
 describe('Retrieve screenshot', () => {
   test('Screenshot exists', async () => {
-    const res = await agent.get('/screenshot/bitcoin').send(null);
+    const res = await agent.get('/screenshot/bitcoin').send(undefined);
 
-    expect(res.statusCode).toEqual(200);
+    expect(res.status).toEqual(200);
     expect(res.headers['content-type']).toEqual(process.env.IMAGE_MIMETYPE);
   });
 
   test('Screenshot does not exist', async () => {
-    const res = await agent.get('/screenshot/doesnotexist').send(null);
+    const res = await agent.get('/screenshot/doesnotexist').send(undefined);
 
-    expect(res.statusCode).toEqual(404);
+    expect(res.status).toEqual(404);
     expect(res.body.ok).toBeFalsy();
   });
 });
