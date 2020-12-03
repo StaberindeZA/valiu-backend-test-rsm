@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,18 +35,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
-var debug = require('debug')('valiu:screenshotWorker');
-var path = require('path');
-var getImagePath = require('./utility').getImagePath;
-var workerFunctions = require('./workerFunctions');
-module.exports = function (job) { return __awaiter(_this, void 0, void 0, function () {
+Object.defineProperty(exports, "__esModule", { value: true });
+var path = require("path");
+var DebugLogger = require("debug");
+var utility_1 = require("./utility");
+var workerFunctions = require("./workerFunctions");
+var debug = DebugLogger('valiu:screenshotWorker');
+exports.default = (function (job) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, url, filename, filePath, error;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = job.data, url = _a.url, filename = _a.filename;
-                filePath = path.dirname(getImagePath(filename)) + "/" + filename;
+                filePath = path.dirname(utility_1.getImagePath(filename)) + "/" + filename;
                 return [4 /*yield*/, workerFunctions.takeScreenshot(url, filePath)];
             case 1:
                 error = _b.sent();
@@ -68,4 +70,4 @@ module.exports = function (job) { return __awaiter(_this, void 0, void 0, functi
                 }];
         }
     });
-}); };
+}); });

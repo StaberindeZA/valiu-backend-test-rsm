@@ -38,9 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.screenshotExists = exports.isValidUrl = exports.getImagePath = exports.getImageFilename = exports.createImageUrl = exports.getUniqueId = void 0;
 /* eslint-disable no-nested-ternary */
-// const { URL: zURL } = require('url');
-// const fs = require('fs');
-// const { v4: uuidv4 } = require('uuid');
 var url_1 = require("url");
 var fs = require("fs");
 var uuid_1 = require("uuid");

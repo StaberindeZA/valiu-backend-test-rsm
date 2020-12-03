@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,9 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
-var puppeteer = require('puppeteer');
-var debug = require('debug')('valiu:workerFunctions');
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.takeScreenshot = void 0;
+var puppeteer = require("puppeteer");
+var DebugLogger = require("debug");
+var debug = DebugLogger('valiu:workerFunctions');
 var screenshot = function (page, url, path) {
     return new Promise(function (resolve, reject) {
         page.on('error', function (err) {
@@ -60,7 +63,7 @@ var screenshot = function (page, url, path) {
         });
     });
 };
-exports.takeScreenshot = function (url, path) { return __awaiter(_this, void 0, void 0, function () {
+var takeScreenshot = function (url, path) { return __awaiter(void 0, void 0, void 0, function () {
     var browser, page, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -100,3 +103,4 @@ exports.takeScreenshot = function (url, path) { return __awaiter(_this, void 0, 
         }
     });
 }); };
+exports.takeScreenshot = takeScreenshot;

@@ -1,5 +1,7 @@
-const puppeteer = require('puppeteer');
-const debug = require('debug')('valiu:workerFunctions');
+import * as puppeteer from 'puppeteer';
+import * as DebugLogger from 'debug';
+
+const debug = DebugLogger('valiu:workerFunctions');
 
 const screenshot = (page, url, path) =>
   new Promise((resolve, reject) => {
@@ -25,7 +27,7 @@ const screenshot = (page, url, path) =>
       });
   });
 
-exports.takeScreenshot = async (url, path) => {
+export const takeScreenshot = async (url, path) => {
   const browser = await puppeteer.launch({
     args: [
       '--disable-gpu',

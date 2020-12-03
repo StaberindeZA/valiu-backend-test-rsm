@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "dev": "DEBUG=valiu* nodemon ./index.js",
-    "built": "nodemon ./built/index.js"
+    "built": "tsc && DEBUG=valiu* nodemon ./built/index.js"
   },
   "keywords": [],
   "author": "",

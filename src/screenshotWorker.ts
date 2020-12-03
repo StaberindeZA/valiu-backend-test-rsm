@@ -1,9 +1,11 @@
-const debug = require('debug')('valiu:screenshotWorker');
-const path = require('path');
-const { getImagePath } = require('./utility');
-const workerFunctions = require('./workerFunctions');
+import * as path from 'path';
+import * as DebugLogger from 'debug';
+import { getImagePath } from './utility';
+import * as workerFunctions from './workerFunctions';
 
-module.exports = async (job) => {
+const debug = DebugLogger('valiu:screenshotWorker');
+
+export default async (job) => {
   const { url, filename } = job.data;
 
   const filePath = `${path.dirname(getImagePath(filename))}/${filename}`;
