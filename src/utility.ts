@@ -5,13 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const getUniqueId = () => uuidv4();
 
-export const createImageUrl = (screenshotId) =>
+export const createImageUrl = (screenshotId: string): string =>
   screenshotId ? `${process.env.SERVER_HOST}/screenshot/${screenshotId}` : null;
 
-export const getImageFilename = (screenshotId) =>
+export const getImageFilename = (screenshotId: string): string =>
   screenshotId ? `${screenshotId}.${process.env.IMAGE_EXTENSION}` : null;
 
-export const getImagePath = (screenshotId) => {
+export const getImagePath = (screenshotId: string): string => {
   const imageFolder =
     process.env.NODE_ENV === 'test'
       ? `${process.env.IMAGE_FOLDER}/test`
@@ -22,7 +22,7 @@ export const getImagePath = (screenshotId) => {
     : null;
 };
 
-export const isValidUrl = (s, protocols = ['http', 'https']) => {
+export const isValidUrl = (s: string, protocols: Array<string> = ['http', 'https']): boolean => {
   try {
     const url = new URL(s);
     return protocols
@@ -35,7 +35,7 @@ export const isValidUrl = (s, protocols = ['http', 'https']) => {
   }
 };
 
-export const screenshotExists = async (screenshotId) => {
+export const screenshotExists = async (screenshotId: string): Promise<boolean> => {
   try {
     await fs.promises.access(
       getImagePath(screenshotId),
