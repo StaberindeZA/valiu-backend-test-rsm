@@ -4,8 +4,8 @@ import DebugLogger from 'debug';
 const debug = DebugLogger('valiu:workerFunctions');
 
 const screenshot = (page: Page, url: string, path: string) => {
-  const type: ScreenshotOptions["type"] = process.env.IMAGE_EXTENSION;
-  
+  const type = <ScreenshotOptions["type"]>process.env.IMAGE_EXTENSION;
+
   return new Promise((resolve, reject) => {
     page.on('error', (err) => {
       reject(err);
