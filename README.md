@@ -31,7 +31,11 @@ REDIS_SERVER_URL=
 ### Run
 
 ```bash
-npm run start
+npm start
+```
+or for development
+```bash
+npm run dev
 ```
 
 ### Use
@@ -43,7 +47,7 @@ POST: http://localhost:4000/screenshot
 
 Body:
 {
-    "url": "https://www.reinomuhl.com
+    "url": "https://www.reinomuhl.com"
 }
 ```
 
