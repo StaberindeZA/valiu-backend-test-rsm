@@ -1,7 +1,7 @@
 require('dotenv').config({ path: '.env' });
-import screenshotWorker from '../screenshotWorker';
-import * as workerFunctions from '../workerFunctions';
-import Queue, { Job, JobId } from 'bull';
+import screenshotWorker from '../queue/screenshotWorker';
+import * as workerFunctions from '../queue/workerFunctions';
+import { Job, JobId } from 'bull';
 
 test('Successfully generate screenshot', async () => {
   const spy = jest.spyOn(workerFunctions, 'takeScreenshot');

@@ -1,6 +1,6 @@
 import path from 'path';
 import DebugLogger from 'debug';
-import { getImagePath } from './utility';
+import { getImagePath } from '../utility';
 import * as workerFunctions from './workerFunctions';
 import { Job } from 'bull';
 

@@ -1,5 +1,5 @@
 require('dotenv').config({ path: '.env' });
-import request, { Response } from 'supertest';
+import request from 'supertest';
 import fs from 'fs';
 import path from 'path';
 import app from '../app';

@@ -31,43 +31,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require('dotenv').config({ path: '.env' });
-const screenshotWorker_1 = __importDefault(require("../queue/screenshotWorker"));
-const workerFunctions = __importStar(require("../queue/workerFunctions"));
-test('Successfully generate screenshot', () => __awaiter(void 0, void 0, void 0, function* () {
-    const spy = jest.spyOn(workerFunctions, 'takeScreenshot');
-    spy.mockResolvedValue(false);
-    const input = {
-        id: '1',
-        data: { url: 'https://www.reinomuhl.com', filename: 'testfile.jpeg' },
-    };
-    const result = yield screenshotWorker_1.default(input);
-    expect(result).toEqual({
-        url: 'https://www.reinomuhl.com',
-        screenshotURL: `${process.env.IMAGE_FOLDER}/test/testfile.jpeg`,
-        generated: true,
-    });
-    spy.mockRestore();
-}));
-test('Failed generate screenshot', () => __awaiter(void 0, void 0, void 0, function* () {
-    const spy = jest.spyOn(workerFunctions, 'takeScreenshot');
-    spy.mockResolvedValue('Error message');
-    // moveToFailed(errorInfo: { message: string; }, ignoreLock?: boolean): Promise<[any, JobId] | null>;
-    const moveToFailed = (errorInfo, ignoreLock) => {
-        return new Promise((resolve, reject) => {
-            resolve(null);
+const path_1 = __importDefault(require("path"));
+const debug_1 = __importDefault(require("debug"));
+const utility_1 = require("../utility");
+const workerFunctions = __importStar(require("./workerFunctions"));
+const debug = debug_1.default('valiu:screenshotWorker');
+exports.default = (job) => __awaiter(void 0, void 0, void 0, function* () {
+    const { url, filename } = job.data;
+    const filePath = `${path_1.default.dirname(utility_1.getImagePath(filename))}/${filename}`;
+    const error = yield workerFunctions.takeScreenshot(url, filePath);
+    if (!error) {
+        debug(`Success. Generated screenshot ${filename}`);
+    }
+    else {
+        debug(error);
+        yield job.moveToFailed({
+            message: error.message,
         });
+        debug(`Requeue job with id: ${job.id}`);
+    }
+    return {
+        url,
+        screenshotURL: filePath,
+        generated: !error,
     };
-    const input = {
-        id: '1',
-        data: { url: 'http://www.localhost.com:4444', filename: 'failed.jpeg' },
-        moveToFailed,
-    };
-    const result = yield screenshotWorker_1.default(input);
-    expect(result).toEqual({
-        url: 'http://www.localhost.com:4444',
-        screenshotURL: `${process.env.IMAGE_FOLDER}/test/failed.jpeg`,
-        generated: false,
-    });
-    spy.mockRestore();
-}));
+});
