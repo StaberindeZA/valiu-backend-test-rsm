@@ -32,25 +32,28 @@ const screenshot = (page: Page, url: string, path: string) => {
   
 
 export const takeScreenshot = async (url: string, path: string) => {
-  const browser = await puppeteer.launch({
-    args: [
-      '--disable-gpu',
-      '--no-sandbox',
-      '--lang=en-US',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-    ],
-  });
-  const page = await browser.newPage();
+  let browser;
+  let page;
 
   try {
+    browser = await puppeteer.launch({
+      args: [
+        '--disable-gpu',
+        '--no-sandbox',
+        '--lang=en-US',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+    });
+    page = await browser.newPage();
+
     await screenshot(page, url, path);
     return false;
   } catch (err) {
     debug(`Caught error and escallating`);
     return err;
   } finally {
-    await page.close();
-    await browser.close();
+    if (page) await page.close();
+    if (browser) await browser.close();
   }
 };

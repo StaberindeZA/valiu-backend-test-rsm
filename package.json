@@ -8,7 +8,8 @@
     "test-detect": "jest --detectOpenHandles",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "DEBUG=valiu* nodemon src/index.ts",
+    "dev": "DEBUG=valiu* nodemon src/index.ts",
+    "start": "npm run build && DEBUG=valiu* nodemon built/index.js",
     "build": "tsc"
   },
   "keywords": [],
