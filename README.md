@@ -47,10 +47,9 @@ Body:
 }
 ```
 
-2. Check status of screenshot
+2. Check status of screenshot 
 
-ScreenshotId is returned in the POST call above.
-
+<sub>(ScreenshotId is returned in the POST call above)</sub>
 ```
 GET: http://localhost:4000/screenshot/:screenshotId/status
 ```
@@ -59,6 +58,11 @@ GET: http://localhost:4000/screenshot/:screenshotId/status
 
 ```
 GET: http://localhost:4000/screenshot/:screenshotId
+```
+
+### Test
+```bash
+npm run test
 ```
 
 ## Design decisions
