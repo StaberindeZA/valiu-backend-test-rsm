@@ -6,6 +6,7 @@ declare global {
       IMAGE_FOLDER: string;
       IMAGE_EXTENSION: 'jpeg' | 'png' | undefined;
       IMAGE_MIMETYPE: string;
+      REDIS_SERVER_URL: string;
     }
   }
 }
